@@ -5,7 +5,9 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.io.Source
 
-class SanitizerSpec extends AnyFlatSpec with Matchers {
+class FormatterSpec extends AnyFlatSpec with Matchers {
+
+  implicit val indent: String = Formatter.getIndent(Conf.default)
 
   val testList: Seq[(String, String)] =
     Seq("basic_1.test.sql" -> "basic_1.result.sql")
@@ -14,13 +16,13 @@ class SanitizerSpec extends AnyFlatSpec with Matchers {
     case (k, v) =>
       (
         k,
-        Source.fromResource(f"com/wistronics/sqlfmt/SanitizerSpec/$k").mkString,
-        Source.fromResource(f"com/wistronics/sqlfmt/SanitizerSpec/$v").mkString
+        Source.fromResource(f"com/wistronics/sqlfmt/FormatterSpec/$k").mkString,
+        Source.fromResource(f"com/wistronics/sqlfmt/FormatterSpec/$v").mkString
       )
   }.foreach {
     case (testFile: String, test: String, resultSql: String) =>
-      "Sanitizer.apply" should f"sanitize SQL in $testFile" in {
-        val res = Sanitizer(test)
+      "FormatterSpec.apply" should f"format sql properlt in $testFile" in {
+        val res = Formatter(test)
         res shouldBe resultSql
       }
   }

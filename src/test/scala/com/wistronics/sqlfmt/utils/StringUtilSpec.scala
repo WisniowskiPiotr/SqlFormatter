@@ -45,6 +45,13 @@ class StringUtilSpec extends AnyFlatSpec with Matchers {
     "  abcd.  efgh  ".sanitize shouldBe "abcd. efgh"
   }
 
+  "StringUtil.indent" should "add additional indent to every line of string" in {
+    "abcd\nefgh\nijk".indent(" ") shouldBe " abcd\n efgh\n ijk"
+  }
+  "StringUtil.undent" should "remove indent from every line of string" in {
+    " abcd\n efgh\nijk\nmm".undent(" ") shouldBe "abcd\nefgh\nijk\nmm"
+  }
+
   "StringUtil.findAllBetween" should "find all substrings between prefix and sufix" in {
     "a (1)(2)a( 3 ) b".substringsBetween("(", Some(")")) shouldBe Seq("1", "2", " 3 ")
   }

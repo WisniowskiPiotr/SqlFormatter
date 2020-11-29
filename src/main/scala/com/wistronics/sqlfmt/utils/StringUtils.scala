@@ -17,6 +17,9 @@ object StringUtils {
     def sha1: String =
       String.format("%032x", new BigInteger(1, MessageDigest.getInstance("SHA-1").digest(v.getBytes("UTF-8"))))
 
+    def indent(implicit indent:String):String = v.split("\n").map(s=>f"$indent$s").mkString("\n")
+    def undent(implicit indent:String):String = v.split("\n").map(s=>s.stripPrefix(indent)).mkString("\n")
+
     def hasOnlyUpperLetters: Boolean = v.filter(_.isLetter).forall(_.isUpper)
 
     def toUnderscore: String =

@@ -5,7 +5,6 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.io.Source
 
-
 class CaserSpec extends AnyFlatSpec with Matchers {
 
   val keywords: Set[String] = Caser.keywords(Conf.default)
@@ -23,7 +22,7 @@ class CaserSpec extends AnyFlatSpec with Matchers {
   }.foreach {
     case (testFile: String, test: String, resultSql: String) =>
       val isToLower = testFile.contains("toLower")
-      "Caser.apply" should f"convert keywords in $testFile to ${if(isToLower) "lowercase" else "uppercase"}" in {
+      "Caser.apply" should f"convert keywords in $testFile to ${if (isToLower) "lowercase" else "uppercase"}" in {
         val res = Caser(test, keywords = keywords, toLower = testFile.contains("toLower"))
         res shouldBe resultSql
       }

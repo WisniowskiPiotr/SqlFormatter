@@ -13,7 +13,7 @@ object Main {
         // fix comas, missing as keywords and `.`
         val (tokenized, tokens) = Tokenizer(sql)
         val sanitized = tokenized.sanitize
-        val cased = Caser(sanitized, keywords = Caser.keywords, toLower = Caser.toLowerOption)
+        val initiallyCased = Caser(sanitized, keywords = Caser.keywords, toLower = false)
 
       //val cased =
     }
