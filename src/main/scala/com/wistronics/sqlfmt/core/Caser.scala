@@ -20,7 +20,7 @@ object Caser {
           result ++ Try(Source.fromResource(resource).getLines()).getOrElse(List()).toSet
       }
 
-  def toLowerOption(implicit conf: Config): Boolean = conf.getBoolean("sel.keywords.toLower")
+  def toLowerOption(implicit conf: Config): Boolean = conf.getBoolean("sql.keywords.to_lower")
 
   def apply(sql: String, keywords: Set[String], toLower: Boolean): String =
     keywords.foldLeft(sql) {

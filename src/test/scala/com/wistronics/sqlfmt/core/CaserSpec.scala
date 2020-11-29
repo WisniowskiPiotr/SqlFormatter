@@ -22,7 +22,8 @@ class CaserSpec extends AnyFlatSpec with Matchers {
       )
   }.foreach {
     case (testFile: String, test: String, resultSql: String) =>
-      "Caser.apply" should f"convert keywords in $testFile to " in {
+      val isToLower = testFile.contains("toLower")
+      "Caser.apply" should f"convert keywords in $testFile to ${if(isToLower) "lowercase" else "uppercase"}" in {
         val res = Caser(test, keywords = keywords, toLower = testFile.contains("toLower"))
         res shouldBe resultSql
       }
