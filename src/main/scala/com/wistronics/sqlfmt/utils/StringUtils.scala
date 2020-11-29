@@ -1,5 +1,8 @@
 package com.wistronics.sqlfmt.utils
 
+import java.math.BigInteger
+import java.security.MessageDigest
+
 import org.apache.commons.lang3.{ StringUtils => JStringUtils }
 
 object StringUtils {
@@ -10,6 +13,9 @@ object StringUtils {
     private val RemoveNonPrintableRegex = "[^\\p{Graph}]+" // removes also double spaces in same run
 
     def sanitize: String = v.replaceAll(RemoveNonPrintableRegex, " ").trim
+
+    def sha1: String =
+      String.format("%032x", new BigInteger(1, MessageDigest.getInstance("SHA-1").digest(v.getBytes("UTF-8"))))
 
     def hasOnlyUpperLetters: Boolean = v.filter(_.isLetter).forall(_.isUpper)
 

@@ -21,5 +21,5 @@ parallelExecution in Test := true
 fork in Test := true
 scalacOptions ++= Seq(
   "-Yrangepos", // required by SemanticDB compiler plugin
- // "-Ywarn-unused-import" // required by `RemoveUnused` rule
+  "-Ywarn-unused" // required by `RemoveUnused` rule
 )
