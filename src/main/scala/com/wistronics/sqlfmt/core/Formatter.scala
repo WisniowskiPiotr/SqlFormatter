@@ -11,13 +11,15 @@ object Formatter {
   val selectKeywords: Set[String] = Set("FROM","WHERE","GROUP","HAVING","ORDER","LIMIT")
 
   def apply(sql: String)(implicit indent:String): String =
-    sql.split(";").map(statement => selectFormat("",statement.split(" "),"")._1).mkString(";\n")
+    sql.split(";").map(statement => selectFormat("",statement.split(" "),"")._1).mkString("\n;\n")
 
   @tailrec
   def selectFormat(output:String, words:Seq[String], currentIndent:String)(implicit indent:String):(String,Seq[String],String) = {
     words match {
+        // TODO: support WITH clause but not for mvp
       case Seq(token, tail @ _*) if token.startsWith("--") => selectFormat(f"$output$currentIndent$token\n", tail, currentIndent)
       case Seq(token, tail @ _*) if token.startsWith("--") => selectFormat(f"$output$currentIndent$token\n", tail, currentIndent)
+      case Seq("SELECT", "DISTINCT", tail @ _*) => queryValuesFormatter(f"$output${currentIndent}SELECT DISTINCT\n", tail, currentIndent.indent)
       case Seq("SELECT", tail @ _*) => queryValuesFormatter(f"$output${currentIndent}SELECT ALL\n", tail, currentIndent.indent)
       case Seq("FROM", schemaTable, "AS", alias, tail @ _*) => selectFormat(f"$output${currentIndent}FROM $schemaTable AS $alias\n", tail, currentIndent)
       case Seq("FROM", schemaTable, alias, tail @ _*) if !selectKeywords.contains(alias) => selectFormat(f"$output${currentIndent}FROM $schemaTable AS $alias\n", tail, currentIndent)
@@ -27,13 +29,14 @@ object Formatter {
       case Seq("HAVING", tail @ _*) => havingFormatter(f"$output\n${currentIndent}WHERE ", tail, currentIndent.indent)
       case Seq("ORDER", "BY", tail @ _*) => orderByFormat(f"$output\n${currentIndent}ORDER BY\n", tail, currentIndent.indent)
       case Seq("LIMIT", limit, tail @ _*) => selectFormat(f"$output\n${currentIndent}LIMIT $limit", tail, currentIndent.undent)
-      //case otherWords => selectFormat(output, tail, currentIndent.undent)
+      //case otherWords => // TODO: probably fail in this case
     }
   }
 
   @tailrec
   def queryValuesFormatter(output:String, words:Seq[String], currentIndent:String)(implicit indent:String,conf: Config):(String,Seq[String],String) = {
     words match {
+        // TODO: mvp will format only `table.column AS alias,` queries later we will support function formats too.
       case Seq("FROM", _*) => selectFormat(output, words, currentIndent.undent)
       case Seq(value, tail @ _*) if value.startsWith("--") =>queryValuesFormatter(f"$output$currentIndent$value\n",tail,currentIndent)
       case Seq(value, "AS", alias, tail @ _*) => queryValuesFormatter(f"$output$currentIndent$value AS $alias\n",tail,currentIndent)
@@ -74,6 +77,7 @@ object Formatter {
     }
   }
 /*
+// TODO: not for mvp but next in line
   @tailrec
   def caseWhenFormatter(output:String, words:Seq[String], currentIndent:String)(implicit indent:String):String = {
     words match {

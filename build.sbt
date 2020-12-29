@@ -23,3 +23,4 @@ scalacOptions ++= Seq(
   "-Yrangepos", // required by SemanticDB compiler plugin
   "-Ywarn-unused" // required by `RemoveUnused` rule
 )
+// TODO: add lib for dynamic deploy versions

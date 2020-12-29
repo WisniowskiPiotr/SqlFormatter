@@ -6,7 +6,7 @@ import scala.util.Try
 import com.wistronics.sqlfmt.utils.StringUtils._
 
 object Tokenizer {
-  val sqlTokenBorders: Seq[(String, String, String)] = Seq(("'", "'", "'"), ("`", "`", "`"), ("--", "\n", "--\n"))
+  val sqlTokenBorders: Seq[(String, String, String)] = Seq(("'", "'", "'"), ("`", "`", "`"), ("--", "\n", "--\n")) // TODO: is the third replace part needed?
 
   def defaultTokenGenerator(blockExt: String, tokenBorder: (String, String)): String =
     f"${tokenBorder._1}${blockExt.sha1}${tokenBorder._2}"
